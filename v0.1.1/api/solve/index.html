@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Solver interface · IntervalLinearAlgebra.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/api/solve/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="IntervalLinearAlgebra.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">IntervalLinearAlgebra.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/linear_systems/">Linear systems</a></li><li><a class="tocitem" href="../../tutorials/eigenvalues/">Eigenvalue computations</a></li></ul></li><li><a class="tocitem" href="../../wip/">Applications</a></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Explanations</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../explanations/solution_set/">Interval system solution set</a></li><li><a class="tocitem" href="../../explanations/preconditioning/">Preconditioning</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox" checked/><label class="tocitem" for="menuitem-5"><span class="docs-label">API</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../classify/">Interval matrices classification</a></li><li class="is-active"><a class="tocitem" href>Solver interface</a></li><li><a class="tocitem" href="../algorithms/">Interval linear systems</a></li><li><a class="tocitem" href="../precondition/">Preconditioners</a></li><li><a class="tocitem" href="../epsilon_inflation/">Verified real linear systems</a></li><li><a class="tocitem" href="../eigenvalues/">Eigenvalues</a></li><li><a class="tocitem" href="../misc/">Miscellaneous</a></li></ul></li><li><a class="tocitem" href="../../references/">References</a></li><li><a class="tocitem" href="../../CONTRIBUTING/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">API</a></li><li class="is-active"><a href>Solver interface</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Solver interface</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/master/docs/src/api/solve.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="General-inteface-for-solving-interval-linear-systems"><a class="docs-heading-anchor" href="#General-inteface-for-solving-interval-linear-systems">General inteface for solving interval linear systems</a><a id="General-inteface-for-solving-interval-linear-systems-1"></a><a class="docs-heading-anchor-permalink" href="#General-inteface-for-solving-interval-linear-systems" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-binding" id="CommonSolve.solve" href="#CommonSolve.solve"><code>CommonSolve.solve</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">solve(A::AbstractMatrix{T},
+      b::AbstractVector{T},
+      solver::AbstractIterativeSolver,
+      [precondition]::AbstractPrecondition=_default_precondition(A, solver),
+      [X]::AbstractVector{T}=enclose(A, b)) where {T&lt;:Interval}</code></pre><p>Solves the square interval system <span>$Ax=b$</span> using the given algorithm, preconditioner and initial enclosure</p><p><strong>Input</strong></p><ul><li><code>A</code> – square interval matrix</li><li><code>b</code> – interval vector</li><li><code>solver</code> – algorithm used to solve the linear system</li><li><code>precondition</code> – preconditioner used. If not given, it is automatically computed based on                   the matrix <code>A</code> and the solver.</li><li><code>X</code> – initial enclosure.        if not given, it is automatically computed using <a href="../misc/#IntervalLinearAlgebra.enclose-Union{Tuple{T}, Tuple{N}, Tuple{StaticArrays.StaticMatrix{N, N, T}, StaticArrays.StaticVector{N, T}}} where {N, T&lt;:Interval}"><code>enclose</code></a></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; solve(A, b, GaussSeidel(), NoPrecondition(), [-10..10, -10..10])
+2-element Vector{Interval{Float64}}:
+ [-1.66668, 1.66668]
+ [-1.33334, 1.33334]
+
+julia&gt; solve(A, b, GaussSeidel())
+2-element Vector{Interval{Float64}}:
+ [-1.66667, 1.66667]
+ [-1.33334, 1.33334]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/4592f032b14dfe1fe243ff0f0b4691407dc24374/src/linear_systems/solve.jl#L1-L44">source</a></section><section><div><pre><code class="nohighlight hljs">solve(A::AbstractMatrix{T},
+      b::AbstractVector{T},
+      solver::AbstractDirectSolver,
+      [precondition]::AbstractPrecondition=_default_precondition(A, solver)) where
+      {T&lt;:Interval}</code></pre><p>Solves the square interval system <span>$Ax=b$</span> using the given algorithm, preconditioner and initial enclosure</p><p><strong>Input</strong></p><ul><li><code>A</code> – square interval matrix</li><li><code>b</code> – interval vector</li><li><code>solver</code> – algorithm used to solve the linear system</li><li><code>precondition</code> – preconditioner used. If not given, it is automatically computed based on                   the matrix <code>A</code> and the solver.</li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; solve(A, b, HansenBliekRohn(), InverseMidpoint())
+2-element Vector{Interval{Float64}}:
+ [-1.66667, 1.66667]
+ [-1.33334, 1.33334]
+
+julia&gt; solve(A, b, HansenBliekRohn())
+2-element Vector{Interval{Float64}}:
+ [-1.66667, 1.66667]
+ [-1.33334, 1.33334]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/4592f032b14dfe1fe243ff0f0b4691407dc24374/src/linear_systems/solve.jl#L57-L98">source</a></section><section><div><pre><code class="nohighlight hljs">solve(A::AbstractMatrix{T},
+      b::AbstractVector{T},
+      [solver]::AbstractLinearSolver,
+      [precondition]::AbstractPrecondition=_default_precondition(A, solver)) where
+      {T&lt;:Interval}</code></pre><p>Solves the square interval system <span>$Ax=b$</span> using the given algorithm, preconditioner and initial enclosure</p><p><strong>Input</strong></p><ul><li><code>A</code> – square interval matrix</li><li><code>b</code> – interval vector</li><li><code>solver</code> – algorithm used to solve the linear system. If not given,             <a href="../algorithms/#IntervalLinearAlgebra.GaussianElimination"><code>GaussianElimination</code></a> is used.</li><li><code>precondition</code> – preconditioner used. If not given, it is automatically computed based on                   the matrix <code>A</code> and the solver.</li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; solve(A, b)
+2-element Vector{Interval{Float64}}:
+ [-1.66667, 1.66667]
+ [-1.33334, 1.33334]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/4592f032b14dfe1fe243ff0f0b4691407dc24374/src/linear_systems/solve.jl#L114-L151">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../classify/">« Interval matrices classification</a><a class="docs-footer-nextpage" href="../algorithms/">Interval linear systems »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.6 on <span class="colophon-date" title="Friday 17 September 2021 06:39">Friday 17 September 2021</span>. Using Julia version 1.6.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

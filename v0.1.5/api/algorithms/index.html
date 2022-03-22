@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Interval linear systems · IntervalLinearAlgebra.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/api/algorithms/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><script src="../../../copy.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="IntervalLinearAlgebra.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">IntervalLinearAlgebra.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/linear_systems/">Linear systems</a></li><li><a class="tocitem" href="../../tutorials/eigenvalues/">Eigenvalue computations</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">Applications</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../applications/FEM_example/">Interval FEM</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Explanations</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../explanations/solution_set/">Interval system solution set</a></li><li><a class="tocitem" href="../../explanations/preconditioning/">Preconditioning</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox" checked/><label class="tocitem" for="menuitem-5"><span class="docs-label">API</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../classify/">Interval matrices classification</a></li><li><a class="tocitem" href="../solve/">Solver interface</a></li><li class="is-active"><a class="tocitem" href>Interval linear systems</a><ul class="internal"><li><a class="tocitem" href="#Enclosure-computation"><span>Enclosure computation</span></a></li><li><a class="tocitem" href="#Exact-characterization"><span>Exact characterization</span></a></li><li><a class="tocitem" href="#Parametric-Solvers"><span>Parametric Solvers</span></a></li></ul></li><li><a class="tocitem" href="../precondition/">Preconditioners</a></li><li><a class="tocitem" href="../epsilon_inflation/">Verified real linear systems</a></li><li><a class="tocitem" href="../eigenvalues/">Eigenvalues</a></li><li><a class="tocitem" href="../misc/">Miscellaneous</a></li></ul></li><li><a class="tocitem" href="../../references/">References</a></li><li><a class="tocitem" href="../../CONTRIBUTING/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">API</a></li><li class="is-active"><a href>Interval linear systems</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Interval linear systems</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/master/docs/src/api/algorithms.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Algorithms"><a class="docs-heading-anchor" href="#Algorithms">Algorithms</a><a id="Algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Algorithms" title="Permalink"></a></h1><p>Algorithms used to solve interval linear systems.</p><ul><li><a href="#IntervalLinearAlgebra.GaussSeidel"><code>IntervalLinearAlgebra.GaussSeidel</code></a></li><li><a href="#IntervalLinearAlgebra.GaussianElimination"><code>IntervalLinearAlgebra.GaussianElimination</code></a></li><li><a href="#IntervalLinearAlgebra.HansenBliekRohn"><code>IntervalLinearAlgebra.HansenBliekRohn</code></a></li><li><a href="#IntervalLinearAlgebra.Jacobi"><code>IntervalLinearAlgebra.Jacobi</code></a></li><li><a href="#IntervalLinearAlgebra.LinearKrawczyk"><code>IntervalLinearAlgebra.LinearKrawczyk</code></a></li><li><a href="#IntervalLinearAlgebra.LinearOettliPrager"><code>IntervalLinearAlgebra.LinearOettliPrager</code></a></li><li><a href="#IntervalLinearAlgebra.NonLinearOettliPrager"><code>IntervalLinearAlgebra.NonLinearOettliPrager</code></a></li><li><a href="#IntervalLinearAlgebra.Skalna06"><code>IntervalLinearAlgebra.Skalna06</code></a></li></ul><h2 id="Enclosure-computation"><a class="docs-heading-anchor" href="#Enclosure-computation">Enclosure computation</a><a id="Enclosure-computation-1"></a><a class="docs-heading-anchor-permalink" href="#Enclosure-computation" title="Permalink"></a></h2><h3 id="Direct-methods"><a class="docs-heading-anchor" href="#Direct-methods">Direct methods</a><a id="Direct-methods-1"></a><a class="docs-heading-anchor-permalink" href="#Direct-methods" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.GaussianElimination" href="#IntervalLinearAlgebra.GaussianElimination"><code>IntervalLinearAlgebra.GaussianElimination</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">GaussianElimination &lt;: AbstractDirectSolver</code></pre><p>Type for the Gaussian elimination solver of the square interval linear system <span>$Ax=b$</span>. For more details see section 5.6.1 of <a href="../../references/#[HOR19]">[HOR19]</a></p><p><strong>Notes</strong></p><ul><li><p>An object of type <code>GaussianElimination</code> is a callable function with method</p><pre><code class="nohighlight hljs">  (ge::GaussianElimination)(A::AbstractMatrix{T},
+                            b::AbstractVector{T}) where {T&lt;:Interval}</code></pre></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; ge = GaussianElimination()
+GaussianElimination linear solver
+
+julia&gt; ge(A, b)
+2-element Vector{Interval{Float64}}:
+ [-1.66667, 1.66667]
+ [-1.33334, 1.33334]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/enclosures.jl#L86-L120">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.HansenBliekRohn" href="#IntervalLinearAlgebra.HansenBliekRohn"><code>IntervalLinearAlgebra.HansenBliekRohn</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">HansenBliekRohn &lt;: AbstractDirectSolver</code></pre><p>Type for the <code>HansenBliekRohn</code> solver of the square interval linear system <span>$Ax=b$</span>. For more details see section 5.6.2 of <a href="../../references/#[HOR19]">[HOR19]</a></p><p><strong>Notes</strong></p><ul><li><p>Hansen-Bliek-Rohn works with H-matrices without precondition and with strongly regular matrices using <a href="../precondition/#IntervalLinearAlgebra.InverseMidpoint"><code>InverseMidpoint</code></a> precondition</p></li><li><p>If the midpoint of <span>$A$</span> is a diagonal matrix, then the algorithm returns the exact hull.</p></li><li><p>An object of type Hansen-Bliek-Rohn is a callable function with method</p><pre><code class="nohighlight hljs">  (hbr::HansenBliekRohn)(A::AbstractMatrix{T},
+                         b::AbstractVector{T}) where {T&lt;:Interval}</code></pre></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; hbr = HansenBliekRohn()
+HansenBliekRohn linear solver
+
+julia&gt; hbr(A, b)
+2-element Vector{Interval{Float64}}:
+ [-1.66667, 1.66667]
+ [-1.33334, 1.33334]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/enclosures.jl#L24-L61">source</a></section></article><h3 id="Iterative-methods"><a class="docs-heading-anchor" href="#Iterative-methods">Iterative methods</a><a id="Iterative-methods-1"></a><a class="docs-heading-anchor-permalink" href="#Iterative-methods" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.GaussSeidel" href="#IntervalLinearAlgebra.GaussSeidel"><code>IntervalLinearAlgebra.GaussSeidel</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">GaussSeidel &lt;: AbstractIterativeSolver</code></pre><p>Type for the Gauss-Seidel solver of the interval linear system <span>$Ax=b$</span>. For details see Section 5.7.4 of <a href="../../references/#[HOR19]">[HOR19]</a></p><p><strong>Fields</strong></p><ul><li><code>max_iterations</code> – maximum number of iterations (default 20)</li><li><code>atol</code>           – absolute tolerance (default 0), if at some point <span>$|xₖ - xₖ₊₁| &lt; atol$</span>                     (elementwise), then stop and return <span>$xₖ₊₁$</span>.                     If <code>atol=0</code>, then <code>min(diam(A))*1e-5</code> is used.</li></ul><p><strong>Notes</strong></p><ul><li><p>An object of type <code>GaussSeidel</code> is a function with method</p><pre><code class="nohighlight hljs">  (gs::GaussSeidel)(A::AbstractMatrix{T},
+                    b::AbstractVector{T},
+                    [x]::AbstractVector{T}=enclose(A, b)) where {T&lt;:Interval}</code></pre><h4>Input</h4><ul><li><code>A</code>   – N×N interval matrix</li><li><code>b</code>   – interval vector of length N</li><li><code>x</code>   – (optional) initial enclosure for the solution of <span>$Ax = b$</span>. If not given,          it is automatically computed using <a href="../misc/#IntervalLinearAlgebra.enclose-Union{Tuple{T}, Tuple{N}, Tuple{StaticArrays.StaticMatrix{N, N, T}, StaticArrays.StaticVector{N, T}}} where {N, T&lt;:Interval}"><code>enclose</code></a></li></ul></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; gs = GaussSeidel()
+GaussSeidel linear solver
+max_iterations = 20
+atol = 0.0
+
+julia&gt; gs(A, b)
+2-element Vector{Interval{Float64}}:
+ [-1.66668, 1.66668]
+ [-1.33334, 1.33334]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/enclosures.jl#L219-L269">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.Jacobi" href="#IntervalLinearAlgebra.Jacobi"><code>IntervalLinearAlgebra.Jacobi</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Jacobi &lt;: AbstractIterativeSolver</code></pre><p>Type for the Jacobi solver of the interval linear system <span>$Ax=b$</span>. For details see Section 5.7.4 of <a href="../../references/#[HOR19]">[HOR19]</a></p><p><strong>Fields</strong></p><ul><li><code>max_iterations</code> – maximum number of iterations (default 20)</li><li><code>atol</code>           – absolute tolerance (default 0), if at some point <span>$|xₖ - xₖ₊₁| &lt; atol$</span>                     (elementwise), then stop and return <span>$xₖ₊₁$</span>.                     If <code>atol=0</code>, then <code>min(diam(A))*1e-5</code> is used.</li></ul><p><strong>Notes</strong></p><ul><li><p>An object of type <code>Jacobi</code> is a function with method</p><pre><code class="nohighlight hljs">  (jac::Jacobi)(A::AbstractMatrix{T},
+                b::AbstractVector{T},
+                [x]::AbstractVector{T}=enclose(A, b)) where {T&lt;:Interval}</code></pre><h4>Input</h4><ul><li><code>A</code>   – N×N interval matrix</li><li><code>b</code>   – interval vector of length N</li><li><code>x</code>   – (optional) initial enclosure for the solution of <span>$Ax = b$</span>. If not given,          it is automatically computed using <a href="../misc/#IntervalLinearAlgebra.enclose-Union{Tuple{T}, Tuple{N}, Tuple{StaticArrays.StaticMatrix{N, N, T}, StaticArrays.StaticVector{N, T}}} where {N, T&lt;:Interval}"><code>enclose</code></a></li></ul></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; jac = Jacobi()
+Jacobi linear solver
+max_iterations = 20
+atol = 0.0
+
+julia&gt; jac(A, b)
+2-element Vector{Interval{Float64}}:
+ [-1.66668, 1.66668]
+ [-1.33335, 1.33335]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/enclosures.jl#L139-L189">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.LinearKrawczyk" href="#IntervalLinearAlgebra.LinearKrawczyk"><code>IntervalLinearAlgebra.LinearKrawczyk</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">LinearKrawczyk &lt;: AbstractIterativeSolver</code></pre><p>Type for the Krawczyk solver of the interval linear system <span>$Ax=b$</span>. For details see Section 5.7.3 of <a href="../../references/#[HOR19]">[HOR19]</a></p><p><strong>Fields</strong></p><ul><li><code>max_iterations</code> – maximum number of iterations (default 20)</li><li><code>atol</code>           – absolute tolerance (default 0), if at some point <span>$|xₖ - xₖ₊₁| &lt; atol$</span>                     (elementwise), then stop and return <span>$xₖ₊₁$</span>.                     If <code>atol=0</code>, then <code>min(diam(A))*1e-5</code> is used.</li></ul><p><strong>Notes</strong></p><ul><li><p>An object of type <code>LinearKrawczyk</code> is a function with method</p><pre><code class="nohighlight hljs">  (kra::LinearKrawczyk)(A::AbstractMatrix{T},
+                        b::AbstractVector{T},
+                        [x]::AbstractVector{T}=enclose(A, b)) where {T&lt;:Interval}</code></pre><h4>Input</h4><ul><li><code>A</code>   – N×N interval matrix</li><li><code>b</code>   – interval vector of length N</li><li><code>x</code>   – (optional) initial enclosure for the solution of <span>$Ax = b$</span>. If not given,          it is automatically computed using <a href="../misc/#IntervalLinearAlgebra.enclose-Union{Tuple{T}, Tuple{N}, Tuple{StaticArrays.StaticMatrix{N, N, T}, StaticArrays.StaticVector{N, T}}} where {N, T&lt;:Interval}"><code>enclose</code></a></li></ul></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -1..1;-1..1 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-1, 1]
+ [-1, 1]   [2, 4]
+
+julia&gt; b = [-2..2, -1..1]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-1, 1]
+
+julia&gt; kra = LinearKrawczyk()
+LinearKrawczyk linear solver
+max_iterations = 20
+atol = 0.0
+
+julia&gt; kra(A, b)
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-2, 2]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/enclosures.jl#L298-L348">source</a></section></article><h2 id="Exact-characterization"><a class="docs-heading-anchor" href="#Exact-characterization">Exact characterization</a><a id="Exact-characterization-1"></a><a class="docs-heading-anchor-permalink" href="#Exact-characterization" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.LinearOettliPrager" href="#IntervalLinearAlgebra.LinearOettliPrager"><code>IntervalLinearAlgebra.LinearOettliPrager</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">LinearOettliPrager &lt;: AbstractDirectSolver</code></pre><p>Type for the OettliPrager solver of the interval linear system <span>$Ax=b$</span>. The solver first converts the system of interval equalities into a system of real inequalities using Oettli-Präger theorem <a href="../../references/#[OET64]">[OET64]</a> and then finds the feasible set by solving a LP problem in each orthant using <code>LazySets.jl</code>.</p><p><strong>Notes</strong></p><ul><li><p>You need to import <code>LazySets.jl</code> to use this functionality.</p></li><li><p>An object of type <code>LinearOettliPrager</code> is a function with methods</p><pre><code class="nohighlight hljs">  (op::LinearOettliPrager)(A::AbstractMatrix{T},
+                           b::AbstractVector{T}) where {T&lt;:Interval}</code></pre><h4>Input</h4><ul><li><code>A</code>   – N×N interval matrix</li><li><code>b</code>   – interval vector of length N</li></ul></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -2..1;-1..2 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-2, 1]
+ [-1, 2]   [2, 4]
+
+julia&gt; b = [-2..2, -2..2]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-2, 2]
+
+julia&gt; polytopes = solve(A, b, LinearOettliPrager());
+
+julia&gt; typeof(polytopes)
+Vector{HPolytope{Float64, SparseArrays.SparseVector{Float64, Int64}}}</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/oettli.jl#L1-L38">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.NonLinearOettliPrager" href="#IntervalLinearAlgebra.NonLinearOettliPrager"><code>IntervalLinearAlgebra.NonLinearOettliPrager</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">NonLinearOettliPrager &lt;: AbstractIterativeSolver</code></pre><p>Type for the OettliPrager solver of the interval linear system <span>$Ax=b$</span>. The solver first converts the system of interval equalities into a system of real inequalities using Oettli-Präger theorem <a href="../../references/#[OET64]">[OET64]</a> and then finds the feasible set using the forward-backward contractor method <a href="../../references/#[JAU14]">[JAU14]</a> implemented in <code>IntervalConstraintProgramming.jl</code>.</p><p><strong>Fields</strong></p><ul><li><code>tol</code> – tolerance for the paving, default 0.01.</li></ul><p><strong>Notes</strong></p><ul><li><p>You need to import <code>IntervalConstraintProgramming.jl</code> to use this functionality.</p></li><li><p>An object of type <code>NonLinearOettliPrager</code> is a function with methods</p><pre><code class="nohighlight hljs">  (op::NonLinearOettliPrager)(A::AbstractMatrix{T},
+                              b::AbstractVector{T},
+                              [X]::AbstractVector{T}=enclose(A, b)) where {T&lt;:Interval}
+
+  (op::NonLinearOettliPrager)(A::AbstractMatrix{T},
+                              b::AbstractVector{T},
+                              X::IntervalBox) where {T&lt;:Interval}</code></pre><h4>Input</h4><ul><li><code>A</code>   – N×N interval matrix</li><li><code>b</code>   – interval vector of length N</li><li><code>X</code>   – (optional) initial enclosure for the solution of <span>$Ax = b$</span>. If not given,          it is automatically computed using <a href="../misc/#IntervalLinearAlgebra.enclose-Union{Tuple{T}, Tuple{N}, Tuple{StaticArrays.StaticMatrix{N, N, T}, StaticArrays.StaticVector{N, T}}} where {N, T&lt;:Interval}"><code>enclose</code></a></li></ul></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; A = [2..4 -2..1;-1..2 2..4]
+2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-2, 1]
+ [-1, 2]   [2, 4]
+
+julia&gt; b = [-2..2, -2..2]
+2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-2, 2]
+
+julia&gt; solve(A, b, NonLinearOettliPrager(0.1))
+Paving:
+- tolerance ϵ = 0.1
+- inner approx. of length 1195
+- boundary approx. of length 823</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/linear_systems/oettli.jl#L42-L91">source</a></section></article><h2 id="Parametric-Solvers"><a class="docs-heading-anchor" href="#Parametric-Solvers">Parametric Solvers</a><a id="Parametric-Solvers-1"></a><a class="docs-heading-anchor-permalink" href="#Parametric-Solvers" title="Permalink"></a></h2><h3 id="Direct-Methods"><a class="docs-heading-anchor" href="#Direct-Methods">Direct Methods</a><a id="Direct-Methods-1"></a><a class="docs-heading-anchor-permalink" href="#Direct-Methods" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-binding" id="IntervalLinearAlgebra.Skalna06" href="#IntervalLinearAlgebra.Skalna06"><code>IntervalLinearAlgebra.Skalna06</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Skalna06</code></pre><p>Direct solver for interval linear systems with affine-parametric dependency. For more information see <a href="../../references/#[SKA06]">[SKA06]</a>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/224b9fe6292d517048a195176a00b1fe17af066e/src/pils/pils_solvers.jl#L3-L8">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../solve/">« Solver interface</a><a class="docs-footer-nextpage" href="../precondition/">Preconditioners »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Sunday 30 January 2022 13:35">Sunday 30 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

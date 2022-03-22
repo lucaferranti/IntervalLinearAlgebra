@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Interval FEM · IntervalLinearAlgebra.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/applications/FEM_example/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><script src="../../../copy.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="IntervalLinearAlgebra.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">IntervalLinearAlgebra.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/linear_systems/">Linear systems</a></li><li><a class="tocitem" href="../../tutorials/eigenvalues/">Eigenvalue computations</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox" checked/><label class="tocitem" for="menuitem-3"><span class="docs-label">Applications</span><i class="docs-chevron"></i></label><ul class="collapsed"><li class="is-active"><a class="tocitem" href>Interval FEM</a><ul class="internal"><li><a class="tocitem" href="#Simple-truss-structure"><span>Simple truss structure</span></a></li><li><a class="tocitem" href="#A-continuum-mechanics-problem"><span>A continuum mechanics problem</span></a></li><li><a class="tocitem" href="#Conclusions"><span>Conclusions</span></a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Explanations</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../explanations/solution_set/">Interval system solution set</a></li><li><a class="tocitem" href="../../explanations/preconditioning/">Preconditioning</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">API</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../api/classify/">Interval matrices classification</a></li><li><a class="tocitem" href="../../api/solve/">Solver interface</a></li><li><a class="tocitem" href="../../api/algorithms/">Interval linear systems</a></li><li><a class="tocitem" href="../../api/precondition/">Preconditioners</a></li><li><a class="tocitem" href="../../api/epsilon_inflation/">Verified real linear systems</a></li><li><a class="tocitem" href="../../api/eigenvalues/">Eigenvalues</a></li><li><a class="tocitem" href="../../api/misc/">Miscellaneous</a></li></ul></li><li><a class="tocitem" href="../../references/">References</a></li><li><a class="tocitem" href="../../CONTRIBUTING/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Applications</a></li><li class="is-active"><a href>Interval FEM</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Interval FEM</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/main/docs/literate/applications/FEM_example.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Application-of-Interval-Linear-Algebra-to-FEM-analysis"><a class="docs-heading-anchor" href="#Application-of-Interval-Linear-Algebra-to-FEM-analysis">Application of Interval Linear Algebra to FEM analysis</a><a id="Application-of-Interval-Linear-Algebra-to-FEM-analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Application-of-Interval-Linear-Algebra-to-FEM-analysis" title="Permalink"></a></h1><p>The Finite Element Method is widely used to solve PDEs in Engineering applications and particularly in Structural Analysis problems <a href="../../references/#[BAT14]">[BAT14]</a>. The procedure consists in discretizing the domain into <em>elements</em> and constructing (<em>assembling</em>) a system of balance equations. For linear problems, this system can be usually written as</p><p class="math-container">\[K \cdot d = f
+\qquad
+K = \sum_{e=1}^{n_e} K_e\]</p><p>where <span>$n_e$</span> is the number of elements of the domain, <span>$f$</span> is the vector of external loads, <span>$K_e$</span> is the stiffness matrix of element <span>$e$</span> in global coordinates, <span>$K$</span> is the assembled stiffness matrix and <span>$d$</span> is the vector of unknown displacements. This tutorial shows how IntervalLinearAlgebra can be used to solve structural mechanics problems with uncertainty in the parameters. Particularly, it highlights the importance of parametric interval linear systems.</p><h2 id="Simple-truss-structure"><a class="docs-heading-anchor" href="#Simple-truss-structure">Simple truss structure</a><a id="Simple-truss-structure-1"></a><a class="docs-heading-anchor-permalink" href="#Simple-truss-structure" title="Permalink"></a></h2><p>A frequent and simple type of structures are <em>Truss structures</em>, which are formed by bars connected but not welded. Truss models are usually considered during the conceptual design of bridges or other structures.</p><h3 id="Stiffness-equations"><a class="docs-heading-anchor" href="#Stiffness-equations">Stiffness equations</a><a id="Stiffness-equations-1"></a><a class="docs-heading-anchor-permalink" href="#Stiffness-equations" title="Permalink"></a></h3><p>The stiffness matrix of a truss element in the local coordinate system is given by</p><p class="math-container">\[K_L = s
+\left(
+ \begin{matrix}
+ 1 &amp; 0 &amp; -1 &amp; 0 \\
+ 0 &amp; 0 &amp;  0 &amp; 0 \\
+-1 &amp; 0 &amp;  1 &amp; 0 \\
+ 0 &amp; 0 &amp;  0 &amp; 0
+\end{matrix}
+\right),\]</p><p>where <span>$s =\frac{E A}{L}$</span> is the stiffness, <span>$E$</span> is the Young modulus, <span>$A$</span> is the area of the cross-section and <span>$L$</span> is the length of that truss element.</p><p>The change-of-basis matrix is given by</p><p class="math-container">\[_G(Q)_L = Q =
+\left(
+  \begin{matrix}
+\cos(\alpha) &amp; -\sin(\alpha) &amp; 0 &amp; 0 \\
+ \sin(\alpha) &amp; \cos(\alpha) &amp;  0 &amp; 0 \\
+ 0 &amp; 0 &amp;  \cos(\alpha) &amp; -\sin(\alpha) \\
+ 0 &amp; 0 &amp;  \sin(\alpha) &amp; \cos(\alpha)
+\end{matrix}
+\right).\]</p><p>The system of equations for each element is written in local coordinates as</p><p class="math-container">\[K_L d_L = f_L\]</p><p>and using the change-of-basis we obtain the equations for that element in the global systems of coordinates</p><p class="math-container">\[K_G d_G = f_G \qquad K_G = Q K_L Q^T.\]</p><p>After the system of equations for each element is in global coordinates, the whole system is assembled.</p><p>The unitary stiffness matrix (for <span>$s=1$</span>) can be computed using the following function.</p><pre><code class="language-julia hljs">function unitaryStiffnessMatrix( coordFirstNode, coordSecondNode  )
+  diff      = (coordSecondNode - coordFirstNode)
+  length   = sqrt( diff&#39; * diff )
+  c        = diff[1] / length
+  s        = diff[2] / length
+  Qloc2glo = [ c -s 0 0 ; s c 0 0 ; 0 0 c -s ; 0 0 s c ]
+  Kloc     = [ 1 0 -1 0 ; 0 0 0 0 ; -1 0 1 0 ; 0 0 0 0 ]
+  Kglo     = Qloc2glo * Kloc * transpose(Qloc2glo)
+  return     Kglo, length
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">unitaryStiffnessMatrix (generic function with 1 method)</code></pre><h3 id="Example-problem"><a class="docs-heading-anchor" href="#Example-problem">Example problem</a><a id="Example-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Example-problem" title="Permalink"></a></h3><p>A problem based on Example 4.1 from <a href="../../references/#[SKA06]">[SKA06]</a> is considered. The following diagram shows the truss structure considered.</p><img src="../../assets/trussDiagram.svg" style="width: 100%" alt="truss diagram"/><h4 id="Case-with-fixed-parameters"><a class="docs-heading-anchor" href="#Case-with-fixed-parameters">Case with fixed parameters</a><a id="Case-with-fixed-parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Case-with-fixed-parameters" title="Permalink"></a></h4><p>The scalar parameters considered are given by</p><pre><code class="language-julia hljs">E = 2e11 ; # Young modulus
+A = 5e-3 ; # Cross-section area</code></pre><p>The coordinate matrix is given by</p><pre><code class="language-julia hljs">nodesCMatrix = [ 0.0 0.0 ;
+                 1.0 1.0 ;
+                 2.0 0.0 ;
+                 3.0 1.0 ;
+                 4.0 0.0 ];</code></pre><p>the connectivity matrix is given by</p><pre><code class="language-julia hljs">connecMatrix = [ 1     2 ;
+                 1     3 ;
+                 2     3 ;
+                 2     4 ;
+                 3     4 ;
+                 3     5 ;
+                 4     5 ];</code></pre><p>and the fixed degrees of freedom (supports) are defined by the vector</p><pre><code class="language-julia hljs">fixedDofs = [ 2 9 10 ];</code></pre><p>The number of elements and nodes are computed, as well as the free degrees of freedom.</p><pre><code class="language-julia hljs">numNodes = size( nodesCMatrix )[1]  # compute the number of nodes
+numElems = size( connecMatrix )[1]  # compute the number of elements
+freeDofs = zeros(Int8, 2*numNodes-length(fixedDofs))
+indDof  = 1 ; counter = 0
+while indDof &lt;= (2*numNodes)
+  if !(indDof in fixedDofs)
+    global counter = counter + 1
+    freeDofs[ counter ] = indDof
+  end
+  global indDof = indDof + 1
+end</code></pre><p>The global stiffness equations are computed for the unknown displacements (free dofs)</p><pre><code class="language-julia hljs">KG = zeros( 2*numNodes, 2*numNodes )
+FG = zeros( 2*numNodes )
+for elem in 1:numElems
+  indexFirstNode  = connecMatrix[ elem, 1 ]
+  indexSecondNode = connecMatrix[ elem, 2 ]
+  dofsElem = [2*indexFirstNode-1 2*indexFirstNode 2*indexSecondNode-1 2*indexSecondNode ]
+  KGelem, lengthElem = unitaryStiffnessMatrix( nodesCMatrix[ indexSecondNode, : ], nodesCMatrix[ indexFirstNode, : ] )
+  stiffnessParam = E * A / lengthElem
+  for i in 1:4
+    for j in 1:4
+      KG[ dofsElem[i], dofsElem[j] ] = KG[ dofsElem[i], dofsElem[j] ] + stiffnessParam * KGelem[i,j]
+    end
+  end
+end
+FG[4] = -1e4 ;
+KG = KG[ freeDofs, : ]
+KG = KG[ :, freeDofs ]
+FG = FG[ freeDofs ]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7-element Vector{Float64}:
+      0.0
+      0.0
+ -10000.0
+      0.0
+      0.0
+      0.0
+      0.0</code></pre><p>and the system is solved.</p><pre><code class="language-julia hljs">u = KG \ FG
+UG = zeros( 2*numNodes )
+UG[ freeDofs ] = u</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7-element Vector{Float64}:
+ -1.9999999999999998e-5
+ -2.500000000000003e-6
+ -3.8713203435596426e-5
+ -5.0e-6
+ -3.414213562373095e-5
+ -1.2500000000000002e-5
+ -1.9571067811865474e-5</code></pre><p>The reference (dashed blue line) and deformed (solid red) configurations of the structure are ploted. Since the displacements are very small, a <code>scaleFactor</code> is considered to amplify the deformation and ease the visualization.</p><pre><code class="language-julia hljs">using Plots
+scaleFactor = 2e3
+plot();
+for elem in 1:numElems
+  indexFirstNode  = connecMatrix[ elem, 1 ];
+  indexSecondNode = connecMatrix[ elem, 2 ];
+  # plot reference element
+  plot!( nodesCMatrix[ [indexFirstNode, indexSecondNode], 1 ],
+         nodesCMatrix[ [indexFirstNode, indexSecondNode], 2 ],
+         linestyle = :dash,  aspect_ratio = :equal,
+         linecolor = &quot;blue&quot;, legend = false)
+
+  # plot deformed element
+  plot!( nodesCMatrix[ [indexFirstNode, indexSecondNode], 1 ]
+           + scaleFactor* [ UG[indexFirstNode*2-1], UG[indexSecondNode*2-1]] ,
+         nodesCMatrix[ [indexFirstNode, indexSecondNode], 2 ]
+           + scaleFactor* [ UG[indexFirstNode*2  ], UG[indexSecondNode*2  ]] , markershape = :circle, aspect_ratio = :equal, linecolor = &quot;red&quot;,
+           linewidth=1.5, legend = false )
+end</code></pre><p><img src="../deformed.png" alt/></p><h4 id="Problem-with-interval-parameters"><a class="docs-heading-anchor" href="#Problem-with-interval-parameters">Problem with interval parameters</a><a id="Problem-with-interval-parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-with-interval-parameters" title="Permalink"></a></h4><p>Suppose now we have a 10% uncertainty for the stiffness <span>$s_{23}$</span> associated with the third element. To model the problem, we introduce the symbolic variable <code>s23</code> using the IntervalLinearAlgebra macro <a href="../../api/misc/#IntervalLinearAlgebra.@affinevars"><code>@affinevars</code></a>.</p><pre><code class="language-julia hljs">using IntervalLinearAlgebra
+@affinevars s23</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1-element Vector{AffineExpression{Int64}}:
+ s23</code></pre><p>now we can construct the matrix as before</p><pre><code class="language-julia hljs">KGp = zeros(AffineExpression{Float64}, 2*numNodes, 2*numNodes );
+for elem in 1:numElems
+  print(&quot; assembling stiffness matrix of element &quot;, elem , &quot;\n&quot;)
+  indexFirstNode  = connecMatrix[ elem, 1 ]
+  indexSecondNode = connecMatrix[ elem, 2 ]
+  dofsElem = [2*indexFirstNode-1 2*indexFirstNode 2*indexSecondNode-1 2*indexSecondNode ]
+  KGelem, lengthElem = unitaryStiffnessMatrix( nodesCMatrix[ indexSecondNode, : ], nodesCMatrix[ indexFirstNode, : ] )
+  if elem == 3
+    stiffnessParam = s23
+  else
+    stiffnessParam = E * A / lengthElem
+  end
+  for i in 1:4
+    for j in 1:4
+      KGp[ dofsElem[i], dofsElem[j] ] = KGp[ dofsElem[i], dofsElem[j] ] + stiffnessParam * KGelem[i,j]
+    end
+  end
+end
+KGp = KGp[ freeDofs, : ]
+KGp = KGp[ :, freeDofs ]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7×7 Matrix{AffineExpression{Float64}}:
+ 8.53553e8   -3.53553e8         -3.53553e8         …  0           0
+ -3.53553e8  0.5s23+8.53553e8   -0.5s23+3.53553e8     -5.0e8      0
+ -3.53553e8  -0.5s23+3.53553e8  0.5s23+3.53553e8      0           0
+ -5.0e8      -0.5s23            0.5s23                -3.53553e8  -3.53553e8
+ 0           0.5s23             -0.5s23               -3.53553e8  -3.53553e8
+ 0           -5.0e8             0                  …  1.20711e9   0
+ 0           0                  0                     0           7.07107e8</code></pre><p>Now we can construct the <a href="../../api/misc/#IntervalLinearAlgebra.AffineParametricArray"><code>AffineParametricArray</code></a></p><pre><code class="language-julia hljs">KGp = AffineParametricArray(KGp)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7×7 AffineParametricMatrix{Float64, Matrix{Float64}}:
+ 8.53553e8   -3.53553e8         -3.53553e8         …  0           0
+ -3.53553e8  0.5s23+8.53553e8   -0.5s23+3.53553e8     -5.0e8      0
+ -3.53553e8  -0.5s23+3.53553e8  0.5s23+3.53553e8      0           0
+ -5.0e8      -0.5s23            0.5s23                -3.53553e8  -3.53553e8
+ 0           0.5s23             -0.5s23               -3.53553e8  -3.53553e8
+ 0           -5.0e8             0                  …  1.20711e9   0
+ 0           0                  0                     0           7.07107e8</code></pre><p>The range of the stiffness is</p><pre><code class="language-julia hljs">srange = E * A / sqrt(2) ± 0.1 * E * A / sqrt(2)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[6.36396e+08, 7.77818e+08]</code></pre><p>To solve the system, we could of course just subsitute <code>srange</code> into the parametric matrix <code>KGp</code> and solve the &quot;normal&quot; interval linear system (naive approach)</p><pre><code class="language-julia hljs">usimple = solve(KGp(srange), Interval.(FG))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7-element Vector{Interval{Float64}}:
+ [-0.00082457, 0.00078457]
+ [-0.000425614, 0.00041974]
+ [-0.000846857, 0.000730646]
+ [-0.000507856, 0.000493328]
+ [-0.00106426, 0.000120603]
+ [-0.000636756, 0.000611756]
+ [-0.000786057, 0.000746914]</code></pre><p>This approach, however suffers from the <a href="https://en.wikipedia.org/wiki/Interval_arithmetic#Dependency_problem">dependency problem</a> and hence the computed displacements will be an overestimation of the true displacements.</p><p>To mitigate this issue, algorithms to solve linear systems with parameters have been developed. In this case we use the algorithm presented in <a href="../../references/#[SKA06]">[SKA06]</a></p><pre><code class="language-julia hljs">uparam = solve(KGp, FG, srange)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7-element Vector{Interval{Float64}}:
+ [-2.00001e-05, -1.99999e-05]
+ [-2.69642e-06, -2.30358e-06]
+ [-3.89097e-05, -3.85167e-05]
+ [-5.00001e-06, -4.99999e-06]
+ [-3.4535e-05, -3.37492e-05]
+ [-1.26965e-05, -1.23035e-05]
+ [-1.97675e-05, -1.93746e-05]</code></pre><p>We can now compare the naive and parametric solution</p><pre><code class="language-julia hljs">hcat(usimple, uparam)/1e-6</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7×2 Matrix{Interval{Float64}}:
+  [-824.57, 784.57]    [-20.0001, -19.9999]
+  [-425.614, 419.74]    [-2.69642, -2.30358]
+  [-846.857, 730.646]  [-38.9097, -38.5167]
+  [-507.856, 493.328]   [-5.00001, -4.99999]
+ [-1064.26, 120.603]   [-34.535, -33.7492]
+  [-636.756, 611.756]  [-12.6965, -12.3035]
+  [-786.057, 746.914]  [-19.7675, -19.3746]</code></pre><p>As you can see, the naive non-parametric approach significantly overestimates the displacements. It is true that for this very simple and small structure, both displacements are small, however as the number of nodes increases, the effect of the dependency problem also increases and the non-parametric approach will fail to give useful results. This is demonstrated in the next section.</p><h2 id="A-continuum-mechanics-problem"><a class="docs-heading-anchor" href="#A-continuum-mechanics-problem">A continuum mechanics problem</a><a id="A-continuum-mechanics-problem-1"></a><a class="docs-heading-anchor-permalink" href="#A-continuum-mechanics-problem" title="Permalink"></a></h2><p>In this problem a simple solid plane problem is considered. The solid is fixed on its bottom edge and loaded with a shear tension on the top edge.</p><p>First, we set the geometry and construct a regular grid of points</p><pre><code class="language-julia hljs">L   = [1.0, 4.0]         # dimension in each direction
+t   = 0.2                # thickness
+nx  = 10                 # number of divisions in direction x
+ny  = 20                 # number of divisions in direction y
+nel = [nx, ny]
+neltot = 2 * nx * ny;    # total number of elements
+nnos         = nel .+ 1       # number of nodes in each direction
+nnosx, nnosy = nnos
+nnostot      = nnosx * nnosy ;  # total number of nodes</code></pre><p>we compute the vector of indexes of the loaded nodes (bottom ones)</p><pre><code class="language-julia hljs">startloadnode = (nnosy - 1) * nnosx + 1 # boundary conditions
+endinloadnode = nnosx * nnosy
+LoadNodes = startloadnode:endinloadnode
+lins1   = range(0, L[1], length=nnosx)
+lins2   = range(0, L[2], length=nnosy)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.0:0.2:4.0</code></pre><p>and construct the matrix of coordinates of the nodes</p><pre><code class="language-julia hljs">nodes = zeros(nnostot, 2) # nodes: first column x-coord, second column y-coord
+for i = 1:nnosy   # first discretize along y-coord
+    idx = (nnosx * (i-1) + 1) : (nnosx*i)
+    nodes[idx, 1] = lins1
+    nodes[idx, 2] = fill(lins2[i], nnosx)
+end</code></pre><p>The connectivity matrix Mcon is computed, considering 3-node triangular elements</p><pre><code class="language-julia hljs">Mcon = Matrix{Int64}(undef, neltot, 3); # connectivity matrix
+for j = 1:ny
+    for i = 1:nx
+        intri1 = 2*(i-1)+1+2*(j-1)*nx
+        intri2 = intri1 + 1
+        Mcon[intri1, :] = [j*nnosx+i,   (j-1)*nnosx+i,  j*nnosx+i+1     ]
+        Mcon[intri2, :] = [j*nnosx+i+1,  (j-1)*nnosx+i,  (j-1)*nnosx+i+1]
+    end
+end</code></pre><p>the undeformed mesh is plotted as follows</p><pre><code class="language-julia hljs">Xel = Matrix{Float64}(undef, 3, neltot); Yel = Matrix{Float64}(undef, 3, neltot)
+for i = 1:neltot
+    Xel[:, i] = nodes[Mcon[i, :], 1] # the j-th column has the x value at the j-th element
+    Yel[:, i] = nodes[Mcon[i, :], 2] # the j-th column has the y value at the j-th element
+end
+fig = plot(ratio=1, xlimits=(-1, 3), title=&quot;Undeformed mesh&quot;, xlabel=&quot;x&quot;, ylabel=&quot;y&quot;)
+plot!(fig, [Xel[:, 1]; Xel[1, 1]], [Yel[:, 1]; Yel[1, 1]], linecolor=:blue, linewidth=1.4, label=&quot;&quot;)
+for i = 2:neltot
+    plot!(fig, [Xel[:, i]; Xel[1, i]], [Yel[:, i]; Yel[1, i]], linecolor=:blue, linewidth=1.4, label=&quot;&quot;)
+end</code></pre><p><img src="../undeformed2.png" alt/></p><p>Let us now define the material parameters. Here we assume a 10% uncertainty on the Young modulus, while Poisson ratio and the density are fixed. can be related to a steel plate problem with an unknown composition, thus unknown exact Young modulus value.</p><pre><code class="language-julia hljs">ν  = 0.25   # Poisson
+ρ  = 8e3  # density
+
+@affinevars E # Young modulus, defined as symbolic variable
+En = 200e9  # nominal value of the young modulus
+Erange = En ± 0.1 * En # uncertainty range of the young modulus</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[1.8e+11, 2.2e+11]</code></pre><p>We can now assemble the global stiffness matrix. We set the constitutive matrix for a plane stress state.</p><pre><code class="language-julia hljs">C = E / (1-ν^2) * [ 1    ν         0 ;
+                    ν    1         0 ;
+                    0    0   (1-ν)/2 ]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3×3 Matrix{AffineExpression{Float64}}:
+ 1.06667E   0.266667E  0
+ 0.266667E  1.06667E   0
+ 0          0          0.4E</code></pre><p>We compute the free and fixed degrees of freedom</p><pre><code class="language-julia hljs">function nodes2dofs(u)
+    v = Vector{Int64}(undef, 2*length(u))
+    for i in 1:length(u)
+        v[2i-1] = 2u[i] - 1;   v[2i] = 2u[i]
+    end
+    return v
+end
+FixNodes = 1:nnosx
+FixDofs = nodes2dofs(FixNodes)              # first add all dofs of the nodes
+deleteat!(FixDofs, 3:2:(length(FixDofs)-2)) # then remove the free dofs of the nodes
+LibDofs = Vector(1:2*nnostot)               # free degrees of fredom
+deleteat!(LibDofs, FixDofs)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">449-element Vector{Int64}:
+   3
+   5
+   7
+   9
+  11
+  13
+  15
+  17
+  19
+  23
+   ⋮
+ 454
+ 455
+ 456
+ 457
+ 458
+ 459
+ 460
+ 461
+ 462</code></pre><p>and we assemble the matrix</p><pre><code class="language-julia hljs">function stiffness_matrix(x, y, C, t)
+
+    A = det([ones(1, 3); x&#39;; y&#39;]) / 2 # element area
+    B = 1 / (2*A) * [y[2]-y[3]                  0    y[3]-y[1]             0    y[1]-y[2]           0   ;
+                             0          x[3]-x[2]            0     x[1]-x[3]            0     x[2]-x[1] ;
+                     x[3]-x[2]          y[2]-y[3]    x[1]-x[3]     y[3]-y[1]    x[2]-x[1]     y[1]-y[2] ]
+
+    K = B&#39; * C * B * A * t ;
+    return K
+end
+
+KG = zeros(AffineExpression{Float64}, 2*nnostot, 2*nnostot);
+for i = 1:neltot
+    Ke = stiffness_matrix(Xel[:, i], Yel[:, i], C, t)
+    aux = nodes2dofs(Mcon[i, :])
+    KG[aux, aux] .+= Ke
+end
+
+K = AffineParametricArray(KG[LibDofs, LibDofs])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">449×449 AffineParametricMatrix{Float64, Matrix{Float64}}:
+ 0.466667E   -0.213333E  0           …  0            0           0
+ -0.213333E  0.466667E   -0.213333E     0            0           0
+ 0           -0.213333E  0.466667E      0            0           0
+ 0           0           -0.213333E     0            0           0
+ 0           0           0              0            0           0
+ 0           0           0           …  0            0           0
+ 0           0           0              0            0           0
+ 0           0           0              0            0           0
+ 0           0           0              0            0           0
+ 0           0           0              0            0           0
+ ⋮                                   ⋱                           
+ 0           0           0           …  0            0           0
+ 0           0           0              0            0           0
+ 0           0           0              0            0           0
+ 0           0           0              0.04E        0           0
+ 0           0           0              -0.08E       0           0
+ 0           0           0           …  -0.0666667E  -0.213333E  0.04E
+ 0           0           0              0.266667E    0.0266667E  -0.08E
+ 0           0           0              0.0266667E   0.233333E   0
+ 0           0           0              -0.08E       0           0.133333E</code></pre><p>Finally, we assemble the loads vector</p><pre><code class="language-julia hljs">areaelemsup = L[1] / nx * t
+
+f = zeros(2*nnostot);
+
+f[2*LoadNodes[1]] = 0.5 * areaelemsup;
+
+for i in 2:(length(LoadNodes)-1)
+    idx = 2 * LoadNodes[i]
+
+    f[idx-1] = 1 * areaelemsup # horizontal force
+end
+f[2*LoadNodes[end]] = 0.5 * areaelemsup
+
+q   = 1e9  # distributed load on the up_edge
+F = q * f;
+FLib = F[LibDofs]</code></pre><p>now we can solve the displacements from the parametric interval linear system and plot minimum and maximum displacement.</p><pre><code class="language-julia hljs">u = solve(K, FLib, Erange) # solving</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">449-element Vector{Interval{Float64}}:
+ [-0.000375901, -0.00030072]
+ [-0.000786493, -0.000629193]
+ [-0.00115412, -0.000923289]
+ [-0.00141887, -0.00113508]
+ [-0.00154482, -0.00123585]
+ [-0.0015165, -0.00121319]
+ [-0.0013351, -0.00106807]
+ [-0.00101494, -0.00081195]
+ [-0.000574351, -0.00045948]
+  [0.00801993, 0.010025]
+   ⋮
+ [-0.0422054, -0.0337642]
+  [0.997107, 1.24639]
+ [-0.0866339, -0.069307]
+  [0.99723, 1.24654]
+ [-0.13129, -0.105031]
+  [0.997325, 1.24666]
+ [-0.176272, -0.141017]
+  [0.997275, 1.2466]
+ [-0.221607, -0.177285]</code></pre><p>plotting</p><pre><code class="language-julia hljs">U = zeros(Interval, 2*nnostot)
+U[LibDofs] .= u
+
+Ux = U[1:2:2*nnostot-1]
+Uy = U[2:2:2*nnostot]
+
+nodesdef = hcat(nodes[:, 1] + Ux, nodes[:, 2] + Uy);
+
+Xeld = Interval.(copy(Xel))
+Yeld = Interval.(copy(Yel))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3×400 Matrix{Interval{Float64}}:
+     [0.2, 0.200001]      [0.2, 0.200001]  …  [4, 4]
+ [0, 0]               [0, 0]                      [3.79999, 3.8]
+     [0.2, 0.200001]  [0, 0]                      [3.79999, 3.8]</code></pre><p>build elements coordinate vectors</p><pre><code class="language-julia hljs">for i = 1:neltot
+    Xeld[:, i] = nodesdef[Mcon[i, :], 1] #  the j-th column has the x coordinate of the j-th element
+    Yeld[:, i] = nodesdef[Mcon[i, :], 2] #  the j-th column has the y coordinate of the j-th element
+end
+
+plot!(fig, [inf.(Xeld[:, 1]); inf.(Xeld[1, 1])], [inf.(Yeld[:, 1]); inf.(Yeld[1, 1])], linecolor=:green, linewidth=1.4, label=&quot;&quot;, title=&quot;Displacements&quot;)
+for i = 2:neltot
+    plot!(fig, [inf.(Xeld[:, i]); inf.(Xeld[1, i])], [inf.(Yeld[:, i]); inf.(Yeld[1, i])], linecolor=:green, linewidth=1.4, label=&quot;&quot;)
+end
+
+plot!(fig, [sup.(Xeld[:, 1]); sup.(Xeld[1, 1])], [sup.(Yeld[:, 1]); sup.(Yeld[1, 1])], linecolor=:red, linewidth=1.4, label=&quot;&quot;, title=&quot;Displacements&quot;)
+for i = 2:neltot
+    plot!(fig, [sup.(Xeld[:, i]); sup.(Xeld[1, i])], [sup.(Yeld[:, i]); sup.(Yeld[1, i])], linecolor=:red, linewidth=1.4, label=&quot;&quot;)
+end</code></pre><p><img src="../displacement2.png" alt/></p><p>In this case, ignoring the dependency and treating the problem as a &quot;normal&quot; interval linear system would fail. The reason for this is that the matrix is not strongly regular, which is a necessary condition for the implemented algorithms to work.</p><pre><code class="language-julia hljs">is_strongly_regular(K(Erange))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">false</code></pre><h2 id="Conclusions"><a class="docs-heading-anchor" href="#Conclusions">Conclusions</a><a id="Conclusions-1"></a><a class="docs-heading-anchor-permalink" href="#Conclusions" title="Permalink"></a></h2><p>This tutorial showed how interval methods can be useful in engineering applications dealing with uncertainty. As in most applications the elements in the matrix will depend on some common parameters, due to the dependency problem neglecting the parametric structure will result in poor results. This highlights the importance of parametric interval methods in engineering applications.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/eigenvalues/">« Eigenvalue computations</a><a class="docs-footer-nextpage" href="../../explanations/solution_set/">Interval system solution set »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Sunday 30 January 2022 13:35">Sunday 30 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Preconditioning · IntervalLinearAlgebra.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/explanations/preconditioning/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="IntervalLinearAlgebra.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">IntervalLinearAlgebra.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/linear_systems/">Linear systems</a></li></ul></li><li><a class="tocitem" href="../../wip/">Applications</a></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox" checked/><label class="tocitem" for="menuitem-4"><span class="docs-label">Explanations</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../solution_set/">Interval system solution set</a></li><li class="is-active"><a class="tocitem" href>Preconditioning</a><ul class="internal"><li><a class="tocitem" href="#Basic-concepts"><span>Basic concepts</span></a></li><li><a class="tocitem" href="#Advantages-of-preconditioning"><span>Advantages of preconditioning</span></a></li><li><a class="tocitem" href="#Disadvantages-of-preconditioning"><span>Disadvantages of preconditioning</span></a></li><li><a class="tocitem" href="#Take-home-lessons"><span>Take-home lessons</span></a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">API</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../api/classify/">Interval matrices classification</a></li><li><a class="tocitem" href="../../api/solve/">Solver interface</a></li><li><a class="tocitem" href="../../api/algorithms/">Interval linear systems</a></li><li><a class="tocitem" href="../../api/precondition/">Preconditioners</a></li><li><a class="tocitem" href="../../api/epsilon_inflation/">Verified real linear systems</a></li><li><a class="tocitem" href="../../api/eigenvalues/">Eigenvalues</a></li><li><a class="tocitem" href="../../api/misc/">Miscellaneous</a></li></ul></li><li><a class="tocitem" href="../../references/">References</a></li><li><a class="tocitem" href="../../CONTRIBUTING/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Explanations</a></li><li class="is-active"><a href>Preconditioning</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Preconditioning</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaIntervals/IntervalLinearAlgebra.jl/blob/master/docs/src/explanations/preconditioning.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Preconditioning-interval-linear-systems"><a class="docs-heading-anchor" href="#Preconditioning-interval-linear-systems">Preconditioning interval linear systems</a><a id="Preconditioning-interval-linear-systems-1"></a><a class="docs-heading-anchor-permalink" href="#Preconditioning-interval-linear-systems" title="Permalink"></a></h1><ul><li><a href="#Preconditioning-interval-linear-systems">Preconditioning interval linear systems</a></li><ul><li><a href="#Basic-concepts">Basic concepts</a></li><li><a href="#Advantages-of-preconditioning">Advantages of preconditioning</a></li><li><a href="#Disadvantages-of-preconditioning">Disadvantages of preconditioning</a></li><li><a href="#Take-home-lessons">Take-home lessons</a></li></ul></ul><h2 id="Basic-concepts"><a class="docs-heading-anchor" href="#Basic-concepts">Basic concepts</a><a id="Basic-concepts-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-concepts" title="Permalink"></a></h2><p>Consider the square interval linear system</p><p class="math-container">\[\mathbf{Ax}=\mathbf{b},\]</p><p><em>preconditioning</em> the interval linear system by a <em>real</em> matrix <span>$C$</span> means to multiply both sides of the equation by <span>$C$</span>, obtaining the new system</p><p class="math-container">\[C\mathbf{Ax}=C\mathbf{b},\]</p><p>which is called <em>preconditioned system</em>. Let us denote by <span>$A_c$</span> the <em>midpoint matrix</em> of <span>$\mathbf{A}$</span>. Popular choices for <span>$C$</span> are</p><ul><li>Inverse midpoint preconditioning: <span>$C\approx A_c^{-1}$</span></li><li>Inverse diagonal midpoint preconditioning: <span>$C\approx D_{A_c}^{-1}$</span> where <span>$D_{A_c}$</span> is the diagonal matrix containing the main diagonal of <span>$A_c$</span>.</li></ul><h2 id="Advantages-of-preconditioning"><a class="docs-heading-anchor" href="#Advantages-of-preconditioning">Advantages of preconditioning</a><a id="Advantages-of-preconditioning-1"></a><a class="docs-heading-anchor-permalink" href="#Advantages-of-preconditioning" title="Permalink"></a></h2><p>Using preconditioning to solve an interval linear system can have mainly two advantages.</p><h3 id="Extend-usability-of-algorithms"><a class="docs-heading-anchor" href="#Extend-usability-of-algorithms">Extend usability of algorithms</a><a id="Extend-usability-of-algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Extend-usability-of-algorithms" title="Permalink"></a></h3><p>Some algorithms require the matrix to have a specific structure in order to be used. For example Hansen-Bliek-Rohn algorithm requires <span>$\mathbf{A}$</span> to be an H-matrix. However, the algorithm can be extended to work to strongly regular matrices using inverse midpoint preconditioning. (Recall that an interval matrix is strongly regular if <span>$A_c^{-1}\mathbf{A}$</span> is an H-matrix).</p><h3 id="Improve-numerical-stability"><a class="docs-heading-anchor" href="#Improve-numerical-stability">Improve numerical stability</a><a id="Improve-numerical-stability-1"></a><a class="docs-heading-anchor-permalink" href="#Improve-numerical-stability" title="Permalink"></a></h3><p>Even if the algorithms theoretically work, they can be prone to numerical instability without preconditioning. This is demonstrated with the following example, a more deep theoretical analysis can be found in <a href="../../references/#[NEU90]">[NEU90]</a>.</p><p>Let <span>$\mathbf{A}$</span> be an interval lower triangular matrix with all <span>$[1, 1]$</span> in the lower part, for example</p><pre><code class="language-julia hljs">using IntervalLinearAlgebra
+
+N = 5 # problem dimension
+A = tril(fill(1..1, N, N))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5×5 Matrix{Interval{Float64}}:
+ [1, 1]  [0, 0]  [0, 0]  [0, 0]  [0, 0]
+ [1, 1]  [1, 1]  [0, 0]  [0, 0]  [0, 0]
+ [1, 1]  [1, 1]  [1, 1]  [0, 0]  [0, 0]
+ [1, 1]  [1, 1]  [1, 1]  [1, 1]  [0, 0]
+ [1, 1]  [1, 1]  [1, 1]  [1, 1]  [1, 1]</code></pre><p>and let <span>$\mathbf{b}$</span> having <span>$[-2, 2]$</span> as first element and all other elements set to zero</p><pre><code class="language-julia hljs">b = vcat(-2..2, fill(0, N-1))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Interval{Float64}}:
+ [-2, 2]
+  [0, 0]
+  [0, 0]
+  [0, 0]
+  [0, 0]</code></pre><p>the &quot;pen and paper&quot; solution would be  <span>$[[-2, 2], [-2, 2], [0, 0], [0, 0], [0, 0]]^\mathsf{T}$</span>, that is a vector with <span>$[-2, 2]$</span> as first two elements and all other elements set to zero. Now, let us try to solve without preconditioning.</p><pre><code class="language-julia hljs">solve(A, b, GaussianElimination(), NoPrecondition())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Interval{Float64}}:
+   [-2, 2]
+   [-2, 2]
+   [-4, 4]
+   [-8, 8]
+ [-16, 16]</code></pre><pre><code class="language-julia hljs">solve(A, b, HansenBliekRohn(), NoPrecondition())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Interval{Float64}}:
+   [-2, 2]
+   [-2, 2]
+   [-4, 4]
+   [-8, 8]
+ [-16, 16]</code></pre><p>It can be seen that the width of the intervals grows exponentially, this gets worse with bigger matrices.</p><pre><code class="language-julia hljs">N = 100 # problem dimension
+A1 = tril(fill(1..1, N, N))
+b1 = [-2..2, fill(0..0, N-1)...]
+
+solve(A1, b1, GaussianElimination(), NoPrecondition())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">100-element Vector{Interval{Float64}}:
+     [-2, 2]
+     [-2, 2]
+     [-4, 4]
+     [-8, 8]
+   [-16, 16]
+   [-32, 32]
+   [-64, 64]
+ [-128, 128]
+ [-256, 256]
+ [-512, 512]
+           ⋮
+         [-2.47589e+27, 2.47589e+27]
+         [-4.95177e+27, 4.95177e+27]
+         [-9.90353e+27, 9.90353e+27]
+         [-1.98071e+28, 1.98071e+28]
+         [-3.96141e+28, 3.96141e+28]
+         [-7.92282e+28, 7.92282e+28]
+         [-1.58457e+29, 1.58457e+29]
+         [-3.16913e+29, 3.16913e+29]
+         [-6.33826e+29, 6.33826e+29]</code></pre><pre><code class="language-julia hljs">solve(A1, b1, HansenBliekRohn(), NoPrecondition())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">100-element Vector{Interval{Float64}}:
+     [-2, 2]
+     [-2, 2]
+     [-4, 4]
+     [-8, 8]
+   [-16, 16]
+   [-32, 32]
+   [-64, 64]
+ [-128, 128]
+ [-256, 256]
+ [-512, 512]
+           ⋮
+         [-2.47589e+27, 2.47589e+27]
+         [-4.95177e+27, 4.95177e+27]
+         [-9.90353e+27, 9.90353e+27]
+         [-1.98071e+28, 1.98071e+28]
+         [-3.96141e+28, 3.96141e+28]
+         [-7.92282e+28, 7.92282e+28]
+         [-1.58457e+29, 1.58457e+29]
+         [-3.16913e+29, 3.16913e+29]
+         [-6.33826e+29, 6.33826e+29]</code></pre><p>However this numerical stability issue is solved using inverse midpoint preconditioning.</p><pre><code class="language-julia hljs">solve(A, b, GaussianElimination(), InverseMidpoint())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-2, 2]
+ [-0, 0]
+ [-0, 0]
+ [-0, 0]</code></pre><pre><code class="language-julia hljs">solve(A, b, HansenBliekRohn(), InverseMidpoint())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-2, 2]
+ [-0, 0]
+ [-0, 0]
+ [-0, 0]</code></pre><h2 id="Disadvantages-of-preconditioning"><a class="docs-heading-anchor" href="#Disadvantages-of-preconditioning">Disadvantages of preconditioning</a><a id="Disadvantages-of-preconditioning-1"></a><a class="docs-heading-anchor-permalink" href="#Disadvantages-of-preconditioning" title="Permalink"></a></h2><p>While preconditioning is useful, sometimes even necessary, to solve interval linear systems, it comes at a price. It is important to understand that <em>the preconditioned interval linear system is <strong>not</strong> equivalent to the original one</em>, particularly the preconditioned problem can have a larger solution set.</p><p>Let us consider the following linear system</p><pre><code class="language-julia hljs">A = [2..4 -2..1;-1..2 2..4]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2×2 Matrix{Interval{Float64}}:
+  [2, 4]  [-2, 1]
+ [-1, 2]   [2, 4]</code></pre><pre><code class="language-julia hljs">b = [-2..2, -2..2]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Interval{Float64}}:
+ [-2, 2]
+ [-2, 2]</code></pre><p>Now we plot the solution set of the original and preconditioned problem using <a href="../solution_set/">Oettli-Präger</a></p><pre><code class="language-julia hljs">using LazySets, Plots
+
+polytopes = solve(A, b, LinearOettliPrager())
+polytopes_precondition = solve(A, b, LinearOettliPrager(), InverseMidpoint())
+
+plot(UnionSetArray(polytopes_precondition), ratio=1, label=&quot;preconditioned&quot;, legend=:right)
+plot!(UnionSetArray(polytopes), label=&quot;original&quot;, α=1)
+xlabel!(&quot;x&quot;)
+ylabel!(&quot;y&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">WARNING: using LazySets.Interval in module IntervalLinearAlgebra conflicts with an existing identifier.
+WARNING: using LazySets.∅ in module IntervalLinearAlgebra conflicts with an existing identifier.</code></pre><p><img src="../solution_set_precondition.png" alt/></p><h2 id="Take-home-lessons"><a class="docs-heading-anchor" href="#Take-home-lessons">Take-home lessons</a><a id="Take-home-lessons-1"></a><a class="docs-heading-anchor-permalink" href="#Take-home-lessons" title="Permalink"></a></h2><ul><li>Preconditioning an interval linear system can enlarge the solution set</li><li>Preconditioning is sometimes needed to achieve numerical stability</li><li>A rough rule of thumb (same used by <code>IntervalLinearAlgebra.jl</code> if no preconditioning is specified)<ul><li>not needed for M-matrices and strictly diagonal dominant matrices</li><li>might be needed for H-matrices (IntervalLinearAlgebra.jl uses inverse midpoint by default with H-matrices)</li><li>must be used for strongly regular matrices</li></ul></li></ul></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../solution_set/">« Interval system solution set</a><a class="docs-footer-nextpage" href="../../api/classify/">Interval matrices classification »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.5 on <span class="colophon-date" title="Wednesday 1 September 2021 18:13">Wednesday 1 September 2021</span>. Using Julia version 1.6.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
